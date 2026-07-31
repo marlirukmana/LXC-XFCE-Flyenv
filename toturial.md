@@ -1,3 +1,4 @@
+```
 apt update
 apt install -y xfce4 xfce4-goodies xorg dbus-x11
 
@@ -12,3 +13,4 @@ sudo apt install ./FlyEnv-4.17.2-x64.deb
 
 adduser developer
 usermod -aG sudo developer
+```

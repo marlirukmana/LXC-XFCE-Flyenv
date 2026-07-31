@@ -131,10 +131,87 @@ server {
     #     proxy_redirect http://$app.test/ /$app/;
 
     #     proxy_set_header Accept-Encoding "";
-	#     sub_filter_once off;
-    #     sub_filter_types text/html;
+    #     sub_filter_once off;
+    #     sub_filter_types application/javascript text/javascript text/html *;
     #     sub_filter "http://$app.test/" "/$app/";
+    #     sub_filter "https://$app.test/" "/$app/";
+    #     sub_filter "//$app.test/" "/$app/";
+    #     sub_filter "http://$app.test" "http://$host/$app";
+
+     #    proxy_cookie_domain $app.test $host;
+     #    proxy_cookie_path / /$app/;
     # }
+    
+    #----------------------------------------------------------------------------------------------------------------------------
+
+}
+
+
+```
+
+single automate
+```
+server {
+    listen 80 default_server;
+    server_name _;
+
+    root /home/developer/Desktop/Projects;
+
+    index index.php index.html index.htm;
+
+
+    # untuk proxy Application 
+    #----------------------------------------------------------------------------------------------------------------------------
+    #
+    # phpMyAdmin -> phpmyadmin.test
+    #
+    location = /phpmyadmin {
+        return 301 /phpmyadmin/;
+    }
+
+    location ^~ /phpmyadmin {
+        client_max_body_size 200M;
+        proxy_set_header Host phpmyadmin.test;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://127.0.0.1/;
+        proxy_redirect / /phpmyadmin/;
+        proxy_redirect http://127.0.0.1/ /phpmyadmin/;
+    }
+
+
+    #
+    # Proxy locations (otomatis)
+    # Otomatis deteksi semua folder di /home/developer/Desktop/Projects
+    # Host otomatis = <nama_folder>.test
+    # proxy_redirect otomatis = / -> /<nama_folder>/
+    #
+     location ~ ^/(?<app>[^/.]+)(?<path>/.*)?$ {
+         if ($path = "") {
+             return 301 /$app/;
+         }
+         client_max_body_size 200M;
+         proxy_set_header Host $app.test;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+         proxy_pass http://127.0.0.1$path$is_args$args;
+         proxy_redirect / /$app/;
+         proxy_redirect http://127.0.0.1/ /$app/;
+         proxy_redirect http://$app.test/ /$app/;
+
+         proxy_set_header Accept-Encoding "";
+         sub_filter_once off;
+         sub_filter_types application/javascript text/javascript text/html *;
+         sub_filter "http://$app.test/" "/$app/";
+         sub_filter "https://$app.test/" "/$app/";
+         sub_filter "//$app.test/" "/$app/";
+         sub_filter "http://$app.test" "http://$host/$app";
+
+         proxy_cookie_domain $app.test $host;
+         proxy_cookie_path / /$app/;
+     }
     
     #----------------------------------------------------------------------------------------------------------------------------
 

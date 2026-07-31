@@ -86,6 +86,7 @@ server {
     }
 
     location ^~ /phpmyadmin {
+        client_max_body_size 200M;
         proxy_set_header Host phpmyadmin.test;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -99,6 +100,7 @@ server {
     # laravel
     #
     location ^~ /laravel {
+        client_max_body_size 200M;
         proxy_set_header Host laravel.test;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -118,6 +120,7 @@ server {
     #     if ($path = "") {
     #         return 301 /$app/;
     #     }
+    #     client_max_body_size 200M;
     #     proxy_set_header Host $app.test;
     #     proxy_set_header X-Real-IP $remote_addr;
     #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

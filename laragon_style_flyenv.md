@@ -128,6 +128,12 @@ server {
     #     proxy_pass http://127.0.0.1$path$is_args$args;
     #     proxy_redirect / /$app/;
     #     proxy_redirect http://127.0.0.1/ /$app/;
+    #     proxy_redirect http://$app.test/ /$app/;
+
+    #     proxy_set_header Accept-Encoding "";
+	#     sub_filter_once off;
+    #     sub_filter_types text/html;
+    #     sub_filter "http://$app.test/" "/$app/";
     # }
     
     #----------------------------------------------------------------------------------------------------------------------------
